@@ -54,4 +54,10 @@ If you have any questions, feel free to contact us! Any feedback on this exercis
 - ```docker build -t autocompany .```
 - ``` docker run -p 80:80 -d autocompany```
 - Navigate to ```http://127.0.0.1/```
+- 
+**Want to setup dev environemnt in Docker? with State Reloader**
+
+- ```docker-compose -f docker/docker-compose.yml build```
+- ```docker-compose -f docker/docker-compose.yml up -d```
+- Navigate to ```http://localhost:6600/```
 
