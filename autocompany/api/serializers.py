@@ -9,7 +9,7 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ["id", "item_code", "name", "description", "unit_price"]
 
 
-class CustomerSerializer(serializers.ModelSerializer):
+class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = ["id", "customer_code", "first_name", "last_name", "pref_name", "gender", "mobile_number", "email"]

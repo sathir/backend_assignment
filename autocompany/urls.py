@@ -19,9 +19,16 @@ from autocompany.api import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # Product
     path('api/v1/products/', views.ProductListView.as_view()),
-    path('api/v1/products/new/', views.ProductCreateView.as_view()),
-    path('api/v1/products/<int:id>/',
+    path('api/v1/product/new/', views.ProductCreateView.as_view()),
+    path('api/v1/product/<int:id>/',
         views.ProductRetrieveUpdateDestroyView.as_view()
+    ),
+    # Client
+    path('api/v1/clients/', views.ClientListView.as_view()),
+    path('api/v1/client/new/', views.ClientCreateView.as_view()),
+    path('api/v1/client/<int:id>/',
+        views.ClientRetrieveUpdateDestroyView.as_view()
     ),
 ]
