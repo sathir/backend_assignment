@@ -60,4 +60,6 @@ If you have any questions, feel free to contact us! Any feedback on this exercis
 - ```docker-compose -f docker/docker-compose.yml build```
 - ```docker-compose -f docker/docker-compose.yml up -d```
 - Navigate to ```http://localhost:6600/```
+- Postman collection included
+- ![img.png](img.png)
 

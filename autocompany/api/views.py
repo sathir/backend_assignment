@@ -3,8 +3,9 @@ from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import LimitOffsetPagination
 
-from autocompany.api.models import Product, Client, ShoppingCartItem
-from autocompany.api.serializers import ProductSerializer, ClientSerializer, ShoppingCartItemSerializer
+from autocompany.api.models import Product, Client, ShoppingCartItem, OrderItem, Order
+from autocompany.api.serializers import ProductSerializer, ClientSerializer, ShoppingCartItemSerializer, \
+    OrderItemSerializer, OrderSerializer
 
 
 class Pagination(LimitOffsetPagination):
@@ -32,7 +33,7 @@ class ProductRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         response = super().delete(request, *args, **kwargs)
         if response.status_code == 204:
             from django.core.cache import cache
-            cache.delete('pet_data_{}'.format(product_id))
+            cache.delete('product_data_{}'.format(product_id))
         return response
 
     def update(self, request, *args, **kwargs):
@@ -40,7 +41,7 @@ class ProductRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         if response.status_code == 200:
             from django.core.cache import cache
             product = response.data
-            cache.set('pet_data_{}'.format(product['id']), {
+            cache.set('product_data_{}'.format(product['id']), {
                 'item_code' : product['name'],
                 'name' : product['name'],
                 'description' : product['description'],
@@ -74,7 +75,7 @@ class ClientRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         response = super().delete(request, *args, **kwargs)
         if response.status_code == 204:
             from django.core.cache import cache
-            cache.delete('pet_data_{}'.format(client_id))
+            cache.delete('client_data_{}'.format(client_id))
         return response
 
     def update(self, request, *args, **kwargs):
@@ -82,7 +83,7 @@ class ClientRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         if response.status_code == 200:
             from django.core.cache import cache
             client = response.data
-            cache.set('pet_data_{}'.format(client['id']), {
+            cache.set('client_data_{}'.format(client['id']), {
                 'customer_code' : client['customer_code'],
                 'first_name' : client['first_name'],
                 'last_name' : client['last_name'],
@@ -110,7 +111,7 @@ class ShoppingCartItemRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         response = super().delete(request, *args, **kwargs)
         if response.status_code == 204:
             from django.core.cache import cache
-            cache.delete('pet_data_{}'.format(shopping_cart_item_id))
+            cache.delete('shopping_cart_item_data_{}'.format(shopping_cart_item_id))
         return response
 
     def update(self, request, *args, **kwargs):
@@ -118,9 +119,70 @@ class ShoppingCartItemRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         if response.status_code == 200:
             from django.core.cache import cache
             shopping_cart_item = response.data
-            cache.set('pet_data_{}'.format(shopping_cart_item['id']), {
+            cache.set('shopping_cart_item_data_{}'.format(shopping_cart_item['id']), {
                 'client' : shopping_cart_item['client'],
                 'product' : shopping_cart_item['product'],
                 'quantity' : shopping_cart_item['quantity'],
+            })
+        return response
+
+
+class OrderCreateView(CreateAPIView):
+    serializer_class = OrderItemSerializer
+
+
+class OrderRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+    queryset = Order.objects.all()
+    lookup_field = 'id'
+    serializer_class = OrderSerializer
+
+    def delete(self, request, *args, **kwargs):
+        order_id = request.data.get('id')
+        response = super().delete(request, *args, **kwargs)
+        if response.status_code == 204:
+            from django.core.cache import cache
+            cache.delete('order_data_{}'.format(order_id))
+        return response
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 200:
+            from django.core.cache import cache
+            order = response.data
+            cache.set('order_item_data_{}'.format(order['id']), {
+                'order_number' : order['order_number'],
+                'address' : order['address'],
+                'delivery_date' : order['delivery_date'],
+                'delivery_fee': order['delivery_fee'],
+            })
+        return response
+
+
+class OrderItemCreateView(CreateAPIView):
+    serializer_class = OrderItemSerializer
+
+
+class OrderItemRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+    queryset = OrderItem.objects.all()
+    lookup_field = 'id'
+    serializer_class = OrderItemSerializer
+
+    def delete(self, request, *args, **kwargs):
+        order_item_id = request.data.get('id')
+        response = super().delete(request, *args, **kwargs)
+        if response.status_code == 204:
+            from django.core.cache import cache
+            cache.delete('order_item_data_{}'.format(order_item_id))
+        return response
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 200:
+            from django.core.cache import cache
+            order_item = response.data
+            cache.set('order_item_data_{}'.format(order_item['id']), {
+                'order' : order_item['order'],
+                'product' : order_item['product'],
+                'quantity' : order_item['quantity'],
             })
         return response

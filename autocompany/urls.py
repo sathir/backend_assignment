@@ -36,4 +36,11 @@ urlpatterns = [
     path('api/v1/cart/<int:id>/',
          views.ShoppingCartItemRetrieveUpdateDestroyView.as_view()
          ),
+    # Order
+    path('api/v1/order/new/', views.OrderCreateView.as_view()),
+    path('api/v1/order/<int:id>/',
+         views.OrderRetrieveUpdateDestroyView.as_view()
+         ),
+    # OrderItem
+    path('api/v1/order/items/add/', views.OrderCreateView.as_view()),
 ]
