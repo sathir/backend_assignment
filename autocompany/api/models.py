@@ -25,7 +25,7 @@ class Client(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.customer_code
+        return self.customer_code +" "+ self.pref_name
 
 
 class ShoppingCartItem(models.Model):
