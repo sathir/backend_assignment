@@ -24,6 +24,9 @@ class Client(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.customer_code
+
 
 class ShoppingCartItem(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
