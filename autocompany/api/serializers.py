@@ -24,7 +24,7 @@ class ShoppingCartItemSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ["client", "address", "delivery_date"]
+        fields = ["order_number","client", "address", "delivery_date", "delivery_fee"]
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
