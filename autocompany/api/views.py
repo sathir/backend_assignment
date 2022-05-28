@@ -3,8 +3,9 @@ from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import LimitOffsetPagination
 
-from autocompany.api.models import Product, Client
-from autocompany.api.serializers import ProductSerializer, ClientSerializer
+from autocompany.api.models import Product, Client, ShoppingCartItem
+from autocompany.api.serializers import ProductSerializer, ClientSerializer, ShoppingCartItemSerializer
+
 
 class Pagination(LimitOffsetPagination):
     default_limit = 5
@@ -57,10 +58,11 @@ class ClientListView(ListAPIView):
     pagination_class = Pagination
     filter_backends = (DjangoFilterBackend, SearchFilter)
     filter_fields = ('id',)
-    search_fields = ('name', 'description')
+    search_fields = ('customer_code', 'first_name', 'last_name', 'pref_name', 'mobile_number', 'email',)
 
 class ClientCreateView(CreateAPIView):
     serializer_class = ClientSerializer
+
 
 class ClientRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     queryset = Client.objects.all()
@@ -90,5 +92,35 @@ class ClientRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
                 'email' : client['email'],
                 'created_at': client['created_at'],
                 'updated_at': client['updated_at'],
+            })
+        return response
+
+
+class ShoppingCartItemCreateView(CreateAPIView):
+    serializer_class = ShoppingCartItemSerializer
+
+
+class ShoppingCartItemRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+    queryset = ShoppingCartItem.objects.all()
+    lookup_field = 'id'
+    serializer_class = ShoppingCartItemSerializer
+
+    def delete(self, request, *args, **kwargs):
+        shopping_cart_item_id = request.data.get('id')
+        response = super().delete(request, *args, **kwargs)
+        if response.status_code == 204:
+            from django.core.cache import cache
+            cache.delete('pet_data_{}'.format(shopping_cart_item_id))
+        return response
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 200:
+            from django.core.cache import cache
+            shopping_cart_item = response.data
+            cache.set('pet_data_{}'.format(shopping_cart_item['id']), {
+                'client' : shopping_cart_item['client'],
+                'product' : shopping_cart_item['product'],
+                'quantity' : shopping_cart_item['quantity'],
             })
         return response
