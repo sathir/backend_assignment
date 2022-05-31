@@ -60,22 +60,22 @@
 					"formdata": [
 						{
 							"key": "item_code",
-							"value": "",
+							"value": "001TST",
 							"type": "text"
 						},
 						{
 							"key": "name",
-							"value": "",
+							"value": "TST",
 							"type": "text"
 						},
 						{
 							"key": "description",
-							"value": "",
+							"value": "TST",
 							"type": "text"
 						},
 						{
 							"key": "unit_price",
-							"value": "",
+							"value": "1",
 							"type": "text"
 						}
 					]
@@ -99,6 +99,59 @@
 			"response": []
 		},
 		{
+			"name": "Create a new Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "order_number",
+							"value": "001TST",
+							"type": "text"
+						},
+						{
+							"key": "client",
+							"value": "00001",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": "TST",
+							"type": "text"
+						},
+						{
+							"key": "delivery_date",
+							"value": "2022-09-09T15:58:00Z",
+							"type": "text"
+						},
+						{
+							"key": "delivery_fee",
+							"value": "100",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:6600/api/v1/order/new/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6600",
+					"path": [
+						"api",
+						"v1",
+						"order",
+						"new",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Create a new client",
 			"request": {
 				"method": "POST",
@@ -108,37 +161,37 @@
 					"formdata": [
 						{
 							"key": "customer_code",
-							"value": "",
+							"value": "001TST",
 							"type": "text"
 						},
 						{
 							"key": "first_name",
-							"value": "",
+							"value": "TST",
 							"type": "text"
 						},
 						{
 							"key": "last_name",
-							"value": "",
+							"value": "TST",
 							"type": "text"
 						},
 						{
 							"key": "pref_name",
-							"value": "",
+							"value": "TST",
 							"type": "text"
 						},
 						{
 							"key": "gender",
-							"value": "",
+							"value": "M",
 							"type": "text"
 						},
 						{
 							"key": "mobile_number",
-							"value": "",
+							"value": "TST",
 							"type": "text"
 						},
 						{
 							"key": "email",
-							"value": "",
+							"value": "abc@abc.com",
 							"type": "text"
 						}
 					]
@@ -177,6 +230,29 @@
 						"api",
 						"v1",
 						"product",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a order by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:6600/api/v1/order/1/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6600",
+					"path": [
+						"api",
+						"v1",
+						"order",
 						"1",
 						""
 					]
@@ -333,7 +409,7 @@
 					"formdata": []
 				},
 				"url": {
-					"raw": "http://localhost:6600/api/v1/product/1/",
+					"raw": "http://localhost:6600/api/v1/product/5/",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -343,7 +419,7 @@
 						"api",
 						"v1",
 						"product",
-						"1",
+						"5",
 						""
 					]
 				}
@@ -371,6 +447,142 @@
 						"v1",
 						"client",
 						"2",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get client shopping cart",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:6600/api/v1/cart/00001/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6600",
+					"path": [
+						"api",
+						"v1",
+						"cart",
+						"00001",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add product to cart",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "client",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "product",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "quantity",
+							"value": "4",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:6600/api/v1/cart/add/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6600",
+					"path": [
+						"api",
+						"v1",
+						"cart",
+						"add",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add cart items to order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "client",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "product",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "quantity",
+							"value": "4",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:6600/api/v1/order/items/cart/add/001",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6600",
+					"path": [
+						"api",
+						"v1",
+						"order",
+						"items",
+						"cart",
+						"add",
+						"001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete product from cart",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:6600/api/v1/cart/00001/remove/003/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6600",
+					"path": [
+						"api",
+						"v1",
+						"cart",
+						"00001",
+						"remove",
+						"003",
 						""
 					]
 				}
