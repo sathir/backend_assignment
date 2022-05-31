@@ -1,7 +1,7 @@
 from django.db import models
 
 class Product(models.Model):
-    item_code = models.CharField(max_length=200)
+    item_code = models.CharField(max_length=200, unique=True)
     name = models.CharField(max_length=200)
     description = models.TextField()
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -14,7 +14,7 @@ class Product(models.Model):
 
 class Client(models.Model):
     GENDER = [('M', 'Male'), ('F', 'Female')]
-    customer_code = models.CharField(max_length=200)
+    customer_code = models.CharField(max_length=200, unique=True)
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
     pref_name = models.CharField(max_length=200)
@@ -37,7 +37,7 @@ class ShoppingCartItem(models.Model):
 
 
 class Order(models.Model):
-    order_number = models.CharField(max_length=200)
+    order_number = models.CharField(max_length=200, unique=True)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     address = models.TextField()
     delivery_date = models.DateTimeField()

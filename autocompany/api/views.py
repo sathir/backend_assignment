@@ -120,19 +120,28 @@ class ShoppingCartItemCreateView(CreateAPIView):
 
 
 class ShoppingCartItemViewSet(viewsets.ViewSet):
-    @action(detail=False, methods=['GET'], url_path=r'(?P<client_id>[0-9]+)/')
-    def cart_items(self, request, client_id):
-        shopping_cart_item = ShoppingCartItem.objects.filter(client=client_id)
-        serializer = ShoppingCartItemSerializer(shopping_cart_item, many=True, context={'request': request})
-        return Response(serializer.data)
+    @action(detail=False, methods=['GET'], url_path=r'(?P<customer_code>[0-9]+)/')
+    def cart_items(self, request, customer_code):
+        try:
+            client_id = Client.objects.filter(customer_code=customer_code).first().id
+            shopping_cart_item = ShoppingCartItem.objects.filter(client=client_id)
+            serializer = ShoppingCartItemSerializer(shopping_cart_item, many=True, context={'request': request})
+            return Response(serializer.data)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    @action(detail=False, methods=['DELETE'], url_path=r'(?P<client_id>[0-9]+)/remove/(?P<product_id>[0-9]+)/')
-    def remove_cart_item(self, request, client_id, product_id):
-        shopping_cart_item = ShoppingCartItem.objects.filter(client=client_id, product=product_id)
-        if shopping_cart_item:
-            shopping_cart_item.delete()
-            return Response(status=status.HTTP_200_OK)
-        else:
+    @action(detail=False, methods=['DELETE'], url_path=r'(?P<customer_code>[0-9]+)/remove/(?P<item_code>[0-9]+)/')
+    def remove_cart_item(self, request, customer_code, item_code):
+        try:
+            item_id = Product.objects.filter(item_code=item_code).first().id
+            client_id = Client.objects.filter(customer_code=customer_code).first().id
+            shopping_cart_item = ShoppingCartItem.objects.filter(client=client_id, product=item_id)
+            if shopping_cart_item:
+                shopping_cart_item.delete()
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+        except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
@@ -217,20 +226,24 @@ class OrderItemViewSet(viewsets.ViewSet):
         try:
             order = Order.objects.filter(order_number=order_number).first()
             shopping_cart_items = ShoppingCartItem.objects.filter(client=order.client.id)
-            for shopping_cart_item in shopping_cart_items:
-                order_item = OrderItem.objects.filter(order=order, product=shopping_cart_item.product)
-                if order_item.exists():
-                    item = order_item.first()
-                    item.quantity += int(shopping_cart_item.quantity)
-                    item.save()
-                    shopping_cart_item.delete()
-                else:
-                    OrderItem.objects.create(
-                        order=order,
-                        product=shopping_cart_item.product,
-                        quantity=shopping_cart_item.quantity,
-                    )
-                    shopping_cart_item.delete()
-            return Response(status=status.HTTP_201_CREATED)
+            if shopping_cart_items:
+                for shopping_cart_item in shopping_cart_items:
+                    order_item = OrderItem.objects.filter(order=order, product=shopping_cart_item.product)
+                    if order_item.exists():
+                        item = order_item.first()
+                        item.quantity += int(shopping_cart_item.quantity)
+                        item.save()
+                        shopping_cart_item.delete()
+                        return Response(status=status.HTTP_201_CREATED)
+                    else:
+                        OrderItem.objects.create(
+                            order=order,
+                            product=shopping_cart_item.product,
+                            quantity=shopping_cart_item.quantity,
+                        )
+                        shopping_cart_item.delete()
+                        return Response(status=status.HTTP_201_CREATED)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)

@@ -30,19 +30,16 @@ urlpatterns = [
     path('api/v1/products/', views.ProductListView.as_view()),
     path('api/v1/product/new/', views.ProductCreateView.as_view()),
     path('api/v1/product/<int:id>/',
-        views.ProductRetrieveUpdateDestroyView.as_view()
-    ),
+         views.ProductRetrieveUpdateDestroyView.as_view()
+         ),
     # Client
     path('api/v1/clients/', views.ClientListView.as_view()),
     path('api/v1/client/new/', views.ClientCreateView.as_view()),
     path('api/v1/client/<int:id>/',
-        views.ClientRetrieveUpdateDestroyView.as_view()
-    ),
+         views.ClientRetrieveUpdateDestroyView.as_view()
+         ),
     # ShoppingCartItem
     path('api/v1/cart/add/', views.ShoppingCartItemCreateView.as_view()),
-    # path('api/v1/cart/<int:client_id>/',
-    #      views.ShoppingCartItemViewSet,
-    #      ),
     # Order
     path('api/v1/order/new/', views.OrderCreateView.as_view()),
     path('api/v1/order/<int:id>/',
