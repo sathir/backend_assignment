@@ -14,11 +14,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
+
 from autocompany.api import views
+
+router = routers.DefaultRouter(trailing_slash=False)
+router.register(r'api/v1/cart', views.ShoppingCartItemViewSet, basename='shopping-cart')
+router.register(r'api/v1/order/items', views.OrderItemViewSet, basename='order-item')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include(router.urls)),
     # Product
     path('api/v1/products/', views.ProductListView.as_view()),
     path('api/v1/product/new/', views.ProductCreateView.as_view()),
@@ -32,15 +39,18 @@ urlpatterns = [
         views.ClientRetrieveUpdateDestroyView.as_view()
     ),
     # ShoppingCartItem
-    path('api/v1/cart/new/', views.ShoppingCartItemCreateView.as_view()),
-    path('api/v1/cart/<int:id>/',
-         views.ShoppingCartItemRetrieveUpdateDestroyView.as_view()
-         ),
+    path('api/v1/cart/add/', views.ShoppingCartItemCreateView.as_view()),
+    # path('api/v1/cart/<int:client_id>/',
+    #      views.ShoppingCartItemViewSet,
+    #      ),
     # Order
     path('api/v1/order/new/', views.OrderCreateView.as_view()),
     path('api/v1/order/<int:id>/',
          views.OrderRetrieveUpdateDestroyView.as_view()
          ),
     # OrderItem
-    path('api/v1/order/items/add/', views.OrderCreateView.as_view()),
+    path('api/v1/order/item/add/', views.OrderItemCreateView.as_view()),
+    path('api/v1/order/item/<int:id>/',
+         views.OrderItemRetrieveUpdateDestroyView.as_view()
+         ),
 ]
