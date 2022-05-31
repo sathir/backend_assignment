@@ -54,7 +54,7 @@ If you have any questions, feel free to contact us! Any feedback on this exercis
 - ```docker build -t autocompany .```
 - ``` docker run -p 80:80 -d autocompany```
 - Navigate to ```http://127.0.0.1/```
-- 
+
 **Want to setup dev environemnt in Docker? with State Reloader**
 
 - ```docker-compose -f docker/docker-compose.yml build```
@@ -63,3 +63,6 @@ If you have any questions, feel free to contact us! Any feedback on this exercis
 - Postman collection included
 - ![img.png](img.png)
 
+**Want to unit test in Docker?**
+- ```docker build -f docker/unit_test/Dockerfile -t autocompany-api .```
+- ```docker run --rm -v $PWD:/app -it autocompany-api```
