@@ -234,7 +234,6 @@ class OrderItemViewSet(viewsets.ViewSet):
                         item.quantity += int(shopping_cart_item.quantity)
                         item.save()
                         shopping_cart_item.delete()
-                        return Response(status=status.HTTP_201_CREATED)
                     else:
                         OrderItem.objects.create(
                             order=order,
@@ -242,7 +241,7 @@ class OrderItemViewSet(viewsets.ViewSet):
                             quantity=shopping_cart_item.quantity,
                         )
                         shopping_cart_item.delete()
-                        return Response(status=status.HTTP_201_CREATED)
+                return Response(status=status.HTTP_201_CREATED)
             else:
                 return Response(status=status.HTTP_404_NOT_FOUND)
         except:
