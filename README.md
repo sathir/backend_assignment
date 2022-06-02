@@ -20,12 +20,19 @@ A company specialised in car parts wants to modernise their company, and start s
 After some initial research, we've defined the following user stories on top of our backlog:
 
 * As a company, I want all my products in a database, so I can offer them via our new platform to customers
+  * http://localhost:6600/api/v1/product/new/
 * As a client, I want to add a product to my shopping cart, so I can order it at a later stage
+  * http://localhost:6600/api/v1/cart/add/
 * As a client, I want to remove a product from my shopping cart, so I can tailor the order to what I actually need
+  * http://localhost:6600/api/v1/cart/{customer_code}/remove/{item_code}/
 * As a client, I want to order the current contents in my shopping cart, so I can receive the products I need to repair my car
+  * http://localhost:6600/api/v1/order/items/cart/add/{order_number}
 * As a client, I want to select a delivery date and time, so I will be there to receive the order
+  * http://localhost:6600/api/v1/order/new/
 * As a client, I want to see an overview of all the products, so I can choose which product I want
+  * http://localhost:6600/api/v1/products/
 * As a client, I want to view the details of a product, so I can see if the product satisfies my needs
+  * http://localhost:6600/api/v1/product/{product_id}/
 
 Develop an API according to the user stories defined above. You should not spend more than 8 hours on this exercise, so put on your MVP glasses and prioritise according to what you think the product should minimally entail.
 
@@ -55,3 +62,14 @@ If you have any questions, feel free to contact us! Any feedback on this exercis
 - ``` docker run -p 80:80 -d autocompany```
 - Navigate to ```http://127.0.0.1/```
 
+**Want to setup dev environemnt in Docker? with State Reloader**
+
+- ```docker-compose -f docker/docker-compose.yml build```
+- ```docker-compose -f docker/docker-compose.yml up -d```
+- Navigate to ```http://localhost:6600/```
+- Postman collection included
+- ![img.png](img.png)
+
+**Want to unit test in Docker?**
+- ```docker build -f docker/unit_test/Dockerfile -t autocompany-api .```
+- ```docker run --rm -v $PWD:/app -it autocompany-api```
